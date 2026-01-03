@@ -1,0 +1,141 @@
+<div class="bg-gray-900 p-4 sm:p-6 rounded-lg text-gray-200 animate-fade-in">
+  <!-- Header -->
+  <div class="text-center border-b-2 border-amber-500 pb-4 mb-6">
+    <h2 class="text-3xl font-bold text-amber-300">{{ coinInfo().name }}</h2>
+    <p class="text-lg text-gray-400">{{ coinInfo().era }} - {{ coinInfo().year }}</p>
+  </div>
+
+  <!-- Main Info Grid -->
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-6 text-center">
+    <div class="bg-gray-800 p-4 rounded-lg">
+      <h3 class="text-sm font-medium text-gray-400 uppercase tracking-wider">Category</h3>
+      <p class="text-xl font-semibold text-amber-400">{{ coinInfo().category }}</p>
+    </div>
+    <div class="bg-gray-800 p-4 rounded-lg relative overflow-hidden group">
+      <div class="absolute inset-0 bg-amber-500/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+      <h3 class="text-sm font-medium text-gray-400 uppercase tracking-wider">Mint</h3>
+      <p class="text-xl font-semibold text-amber-400">{{ coinInfo().mint }}</p>
+      @if (coinInfo().mintMarkDescription) {
+        <p class="text-xs text-gray-400 mt-1 italic">"{{ coinInfo().mintMarkDescription }}"</p>
+      }
+    </div>
+    <div class="bg-gray-800 p-4 rounded-lg col-span-2">
+      <h3 class="text-sm font-medium text-gray-400 uppercase tracking-wider">Estimated Value</h3>
+      <p class="text-2xl font-bold text-green-400">{{ coinInfo().estimatedValue }}</p>
+    </div>
+  </div>
+
+  <!-- Detailed Information -->
+  <div class="space-y-6">
+    <!-- Descriptions -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div class="bg-gray-800 p-4 rounded-lg">
+        <h4 class="font-semibold text-amber-300 mb-2">Obverse (Front)</h4>
+        <p class="text-gray-300">{{ coinInfo().obverseDescription }}</p>
+      </div>
+      <div class="bg-gray-800 p-4 rounded-lg">
+        <h4 class="font-semibold text-amber-300 mb-2">Reverse (Back)</h4>
+        <p class="text-gray-300">{{ coinInfo().reverseDescription }}</p>
+      </div>
+    </div>
+
+    <!-- Specifications -->
+    <div class="bg-gray-800 p-4 rounded-lg">
+      <h4 class="font-semibold text-amber-300 mb-3">Specifications</h4>
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+        <div><strong class="text-gray-400">Material:</strong> {{ coinInfo().material }}</div>
+        <div><strong class="text-gray-400">Weight:</strong> {{ coinInfo().weight }}</div>
+        <div><strong class="text-gray-400">Diameter:</strong> {{ coinInfo().diameter }}</div>
+        <div><strong class="text-gray-400">Shape:</strong> {{ coinInfo().shape }}</div>
+      </div>
+    </div>
+    
+    @if (coinInfo().errorTypes?.length > 0) {
+      <div class="bg-gray-800 p-4 rounded-lg">
+        <h4 class="font-semibold text-amber-300 mb-2">Common Errors & Varieties</h4>
+        <div class="flex flex-wrap gap-2">
+          @for (error of coinInfo().errorTypes; track error) {
+            <span class="bg-red-900 text-red-200 text-xs font-medium px-2.5 py-0.5 rounded-full">{{ error }}</span>
+          }
+        </div>
+      </div>
+    }
+
+    <!-- Historical Context -->
+    <div class="bg-gray-800 p-4 rounded-lg">
+      <h4 class="font-semibold text-amber-300 mb-2">Historical Context</h4>
+      <p class="text-gray-300 italic">{{ coinInfo().historicalContext }}</p>
+    </div>
+    
+    <!-- Sources -->
+    @if (coinInfo().sources?.length > 0) {
+      <div class="bg-gray-800 p-4 rounded-lg">
+        <h4 class="font-semibold text-amber-300 mb-2">Sources</h4>
+        <ul class="list-disc list-inside space-y-1">
+          @for (source of coinInfo().sources; track source.uri) {
+            <li>
+              <a [href]="source.uri" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:underline">
+                {{ source.title }}
+              </a>
+            </li>
+          }
+        </ul>
+      </div>
+    }
+  </div>
+  
+  <!-- Actions -->
+  <div class="mt-8 pt-6 border-t border-gray-700 flex flex-wrap justify-center gap-4">
+    <button (click)="buyCoin()" [disabled]="isSelling()" class="flex items-center justify-center w-36 bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg transition-colors disabled:opacity-75 disabled:cursor-not-allowed">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
+      <span>Buy Coin</span>
+    </button>
+     <button (click)="sellCoin()" [disabled]="isSelling()" class="flex items-center justify-center w-36 bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg transition-colors disabled:opacity-75 disabled:cursor-wait">
+      @if (isSelling()) {
+        <svg class="animate-spin h-5 w-5 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+        <span>Processing...</span>
+      } @else {
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor"><path d="M17.926 9.342A8.501 8.501 0 0010 2.5a8.5 8.5 0 00-7.926 6.842 1.5 1.5 0 00-.074.858 1 1 0 00.998 1.05h14a1 1 0 00.998-1.05 1.5 1.5 0 00-.074-.858zM3 12.5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM5 15a1 1 0 000 2h10a1 1 0 100-2H5z" /></svg>
+        <span>Sell Coin</span>
+      }
+    </button>
+    @if (!isAddedToCollection()) {
+      <button (click)="addToCollection()" [disabled]="isSelling()" class="flex items-center bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition-colors disabled:opacity-75 disabled:cursor-wait">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor"><path d="M5 4a2 2 0 012-2h6a2 2 0 012 2v14l-5-2.5L5 18V4z" /></svg>
+        Add to Collection
+      </button>
+    } @else {
+      <button disabled class="flex items-center bg-green-600 text-white font-bold py-2 px-4 rounded-lg cursor-not-allowed">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" /></svg>
+        In Collection
+      </button>
+    }
+    <button (click)="speak()" [disabled]="isLoadingSpeech() || isSpeaking() || isSelling()" class="flex items-center bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded-lg transition-colors disabled:opacity-75 disabled:cursor-wait">
+      @if (isLoadingSpeech()) {
+        <svg class="animate-spin h-5 w-5 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+        <span>Generating...</span>
+      } @else if (isSpeaking()) {
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.707.707L4.586 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.586l3.707-3.707a1 1 0 011.09-.217zM14.657 2.929a1 1 0 011.414 0A9.972 9.972 0 0119 10a9.972 9.972 0 01-2.929 7.071 1 1 0 01-1.414-1.414A7.971 7.971 0 0017 10c0-2.21-.894-4.208-2.343-5.657a1 1 0 010-1.414zm-2.828 2.828a1 1 0 011.414 0A5.983 5.983 0 0115 10a5.984 5.984 0 01-1.757 4.243 1 1 0 01-1.414-1.414A3.986 3.986 0 0013 10a3.986 3.986 0 00-1.172-2.828 1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
+        <span>Speaking...</span>
+      } @else {
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor"><path d="M6 2a1 1 0 00-1 1v1.303A7.5 7.5 0 003.13 8.843a1 1 0 00.512 1.063l.737.368a1 1 0 001.2-.556 5.5 5.5 0 019.839 0 1 1 0 001.2.556l.737-.368a1 1 0 00.512-1.063A7.5 7.5 0 0015 4.303V3a1 1 0 00-2 0v1.01a5.5 5.5 0 01-7 0V3a1 1 0 00-1-1zM4 12.5A3.5 3.5 0 017.5 9h5A3.5 3.5 0 0116 12.5v1a1 1 0 01-1 1h-2.5a1 1 0 00-.866.504l-1.134 2.268a1 1 0 01-.866.504h-1.268a1 1 0 01-.866-.504l-1.134-2.268A1 1 0 006.5 14.5H4v-2z" /></svg>
+        <span>Read Aloud</span>
+      }
+    </button>
+  </div>
+  
+  @if (qrCodeUrl()) {
+    <div class="mt-6 p-4 bg-gray-800 rounded-lg text-center">
+      <h4 class="font-semibold text-amber-300 mb-2">Coin Information QR Code</h4>
+      <div class="flex justify-center">
+        <img [src]="qrCodeUrl()!" alt="Generated QR Code" class="w-48 h-48 border-4 border-white rounded-lg"/>
+      </div>
+      <a [href]="qrCodeUrl()!" download="bhawarcoin-{{coinInfo().name}}.png" class="mt-3 inline-block bg-amber-500 hover:bg-amber-600 text-gray-900 font-bold py-2 px-4 rounded-lg text-sm">Download QR</a>
+    </div>
+  }
+  
+  <!-- Chatbot -->
+  <div class="mt-8 pt-6 border-t border-gray-700">
+      <app-chatbot [context]="chatContext()"></app-chatbot>
+  </div>
+</div>

@@ -1,0 +1,64 @@
+<div class="min-h-screen bg-gray-900 text-white flex flex-col">
+  <header class="bg-gray-800 shadow-lg sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto py-3 px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center">
+        <!-- Logo and Brand -->
+        <a [routerLink]="['/']" class="flex items-center space-x-3 cursor-pointer">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-amber-400" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm0-2a6 6 0 100-12 6 6 0 000 12zm0-10a1 1 0 011 1v4a1 1 0 11-2 0V7a1 1 0 011-1z" clip-rule="evenodd" />
+          </svg>
+          <h1 class="text-2xl font-bold tracking-tight text-amber-400">Bhawarcoin</h1>
+        </a>
+
+        <!-- Desktop Navigation -->
+        <nav class="hidden md:flex items-center space-x-6">
+          <a [routerLink]="['/home']" routerLinkActive="text-amber-400" [routerLinkActiveOptions]="{exact: true}" class="text-gray-300 hover:text-amber-400 transition-colors font-medium">Home</a>
+          <a [routerLink]="['/mints']" routerLinkActive="text-amber-400" class="text-gray-300 hover:text-amber-400 transition-colors font-medium">Mints</a>
+          @if(currentUser()){
+            <a [routerLink]="['/collections']" routerLinkActive="text-amber-400" class="text-gray-300 hover:text-amber-400 transition-colors font-medium">Collections</a>
+            <a [routerLink]="['/auction']" routerLinkActive="text-amber-400" class="text-gray-300 hover:text-amber-400 transition-colors font-medium">Auction</a>
+            <a [routerLink]="['/qr-scan']" routerLinkActive="text-amber-400" class="text-gray-300 hover:text-amber-400 transition-colors font-medium">Scan QR</a>
+            <a [routerLink]="['/profile']" routerLinkActive="text-amber-400" class="text-gray-300 hover:text-amber-400 transition-colors font-medium">Profile</a>
+            @if(currentUser()?.role === 'admin') {
+              <a [routerLink]="['/admin']" routerLinkActive="text-amber-400" class="text-red-400 hover:text-red-300 transition-colors font-medium border border-red-500/50 rounded-md px-2 py-0.5">Admin</a>
+            }
+          }
+        </nav>
+        
+        <!-- Auth buttons -->
+        <div class="hidden md:flex items-center space-x-3">
+           @if(currentUser(); as user) {
+            <span class="text-gray-300">Welcome, {{ user.name.split(' ')[0] }}</span>
+            <button (click)="logout()" class="bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors">Logout</button>
+          } @else {
+            <a [routerLink]="['/login']" class="bg-gray-700 hover:bg-gray-600 text-white font-semibold py-2 px-4 rounded-lg transition-colors">Login</a>
+            <a [routerLink]="['/signup']" class="bg-amber-500 hover:bg-amber-600 text-gray-900 font-semibold py-2 px-4 rounded-lg transition-colors">Sign Up</a>
+          }
+        </div>
+
+        <!-- Mobile Menu Button (placeholder) -->
+        <div class="md:hidden">
+          <button class="text-gray-300 hover:text-white">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="flex-grow">
+    <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+      <router-outlet></router-outlet>
+    </div>
+  </main>
+
+  <footer class="bg-gray-800 text-center py-4 mt-8">
+      <p class="text-sm text-gray-400">&copy; 2024 Bhawarcoin Software. All rights reserved.</p>
+      <div class="text-xs text-gray-500 mt-1">
+          <span>bhawarcoin@gmail.com</span> | <span>+91 9216931412</span>
+       </div>
+  </footer>
+  <app-payment-modal></app-payment-modal>
+</div>

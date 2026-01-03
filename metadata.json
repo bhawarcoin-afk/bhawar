@@ -1,0 +1,7 @@
+{
+  "name": " Bhawarcoin",
+  "description": "An application to identify Republic Indian, British Indian, and Mughal Empire coins using your camera. Get detailed information, including mint marks, varieties, errors, and current market value.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}

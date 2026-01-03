@@ -1,0 +1,66 @@
+@if (isOpen()) {
+  <div class="fixed inset-0 z-[60] flex items-center justify-center p-4 animate-fade-in" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+    
+    <!-- Backdrop -->
+    <div class="fixed inset-0 bg-black/80 backdrop-blur-sm transition-opacity" (click)="close()"></div>
+
+    <!-- Modal Panel -->
+    <div class="relative bg-gray-800 rounded-2xl shadow-2xl max-w-sm w-full border border-gray-700 overflow-hidden transform transition-all">
+      
+      <!-- Close Button -->
+      <button (click)="close()" class="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors z-10">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+
+      <!-- Content -->
+      <div class="p-8 text-center min-h-[400px] flex flex-col justify-center">
+        
+        <!-- Step Icon -->
+        <div class="text-6xl mb-6 transform transition-transform duration-500 hover:scale-110">
+          {{ steps[currentStepIndex()].icon }}
+        </div>
+
+        <!-- Step Title -->
+        <h3 class="text-2xl font-bold text-amber-400 mb-3" id="modal-title">
+          {{ steps[currentStepIndex()].title }}
+        </h3>
+
+        <!-- Step Description -->
+        <p class="text-gray-300 leading-relaxed mb-8">
+          {{ steps[currentStepIndex()].description }}
+        </p>
+
+        <!-- Progress Indicators -->
+        <div class="flex justify-center space-x-2 mb-8">
+          @for (step of steps; track $index) {
+            <button 
+              (click)="goToStep($index)"
+              class="w-2.5 h-2.5 rounded-full transition-all duration-300 focus:outline-none"
+              [class.bg-amber-500]="$index === currentStepIndex()"
+              [class.w-6]="$index === currentStepIndex()"
+              [class.bg-gray-600]="$index !== currentStepIndex()"
+            ></button>
+          }
+        </div>
+
+        <!-- Navigation Buttons -->
+        <div class="flex justify-between items-center mt-auto">
+          <button 
+            (click)="prevStep()" 
+            [class.invisible]="currentStepIndex() === 0"
+            class="text-gray-400 hover:text-white font-medium text-sm px-4 py-2">
+            Back
+          </button>
+
+          <button 
+            (click)="nextStep()" 
+            class="bg-amber-500 hover:bg-amber-600 text-gray-900 font-bold py-2 px-6 rounded-full shadow-lg shadow-amber-500/20 transition-all transform active:scale-95">
+            {{ currentStepIndex() === steps.length - 1 ? 'Get Started' : 'Next' }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+}

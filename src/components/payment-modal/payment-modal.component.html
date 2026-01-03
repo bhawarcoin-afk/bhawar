@@ -1,0 +1,83 @@
+@if (paymentService.isModalOpen()) {
+  <div class="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-50 animate-fade-in">
+    <div class="bg-gray-800 rounded-xl shadow-2xl border border-gray-700 w-full max-w-md p-6 m-4 relative">
+      
+      <button (click)="closeModal()" class="absolute top-3 right-3 text-gray-400 hover:text-white">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+      </button>
+      
+      @if (paymentService.paymentDetails(); as details) {
+        <div>
+          @switch (status()) {
+            @case ('awaiting') {
+              <div class="text-center">
+                <h2 class="text-2xl font-bold text-amber-300">Complete Your Payment</h2>
+                <p class="text-gray-400 mt-2">To purchase "{{ details.itemName }}", scan the QR code or use your UPI app.</p>
+                
+                <div class="my-6 flex justify-center">
+                  @if(qrCodeUrl()){
+                    <div class="p-2 bg-white rounded-lg shadow-inner">
+                       <img [src]="qrCodeUrl()!" alt="UPI QR Code" class="w-56 h-56"/>
+                    </div>
+                  } @else {
+                    <div class="w-56 h-56 bg-gray-700 flex items-center justify-center rounded-lg">
+                      <p class="text-gray-400">Generating QR...</p>
+                    </div>
+                  }
+                </div>
+                
+                <div class="bg-gray-700/50 p-4 rounded-lg mb-4">
+                   <p class="text-lg font-semibold">Amount: <span class="text-green-400">{{ details.amount | currency:'INR':'symbol':'1.2-2' }}</span></p>
+                   <p class="text-sm text-gray-400">To: {{ details.recipientName }}</p>
+                </div>
+                
+                <!-- Mobile Payment Button -->
+                <a [href]="sanitizedDeepLink()" target="_blank" class="mb-3 block w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg text-center transition-colors shadow-lg transform active:scale-95 md:hidden">
+                   Pay via UPI App (GPay/PhonePe)
+                </a>
+
+                <button (click)="simulatePayment()" class="w-full bg-gray-700 hover:bg-gray-600 text-gray-300 font-semibold py-2 px-4 rounded-lg text-sm">
+                  Simulate Success (Demo)
+                </button>
+              </div>
+            }
+            @case ('processing') {
+              <div class="text-center p-8">
+                 <svg class="animate-spin h-12 w-12 text-amber-400 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                  <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                <h3 class="text-2xl font-bold text-gray-200 mt-4">Processing Payment...</h3>
+                <p class="text-gray-400">Please wait while we confirm your transaction.</p>
+              </div>
+            }
+            @case ('success') {
+              <div class="text-center p-8">
+                <div class="w-20 h-20 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-4 animate-bounce">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>
+                </div>
+                <h3 class="text-2xl font-bold text-green-400">Payment Successful!</h3>
+                <p class="text-gray-300 mt-2">Your purchase of "{{ details.itemName }}" is complete. Thank you!</p>
+                <button (click)="closeModal()" class="mt-6 w-full bg-amber-500 hover:bg-amber-600 text-gray-900 font-bold py-2 px-4 rounded-lg transition-colors">
+                  Done
+                </button>
+              </div>
+            }
+            @case ('failed') {
+               <div class="text-center p-8">
+                <div class="w-20 h-20 bg-red-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                </div>
+                <h3 class="text-2xl font-bold text-red-400">Payment Failed</h3>
+                <p class="text-gray-300 mt-2">Transaction could not be completed.</p>
+                <button (click)="closeModal()" class="mt-6 w-full bg-gray-600 hover:bg-gray-500 text-white font-bold py-2 px-4 rounded-lg">
+                  Close
+                </button>
+              </div>
+            }
+          }
+        </div>
+      }
+    </div>
+  </div>
+}

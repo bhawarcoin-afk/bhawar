@@ -1,0 +1,48 @@
+<div class="p-4 md:p-6 bg-gray-800 rounded-xl shadow-2xl border border-gray-700 animate-fade-in">
+  <div class="text-center mb-8">
+    <h1 class="text-3xl font-bold text-amber-300">Indian Mints Identifier</h1>
+    <p class="mt-2 text-gray-400">A complete guide to identifying mint marks on British & Republic Indian coins.</p>
+  </div>
+
+  <div class="overflow-hidden rounded-lg border border-gray-700">
+    <table class="min-w-full divide-y divide-gray-700">
+      <thead class="bg-gray-900">
+        <tr>
+          <th scope="col" class="px-6 py-4 text-left text-xs font-bold text-amber-400 uppercase tracking-wider">Mint & Location</th>
+          <th scope="col" class="px-6 py-4 text-center text-xs font-bold text-amber-400 uppercase tracking-wider">Symbol</th>
+          <th scope="col" class="px-6 py-4 text-left text-xs font-bold text-amber-400 uppercase tracking-wider">Identification Guide</th>
+        </tr>
+      </thead>
+      <tbody class="bg-gray-800 divide-y divide-gray-700">
+        @for (mint of mints(); track mint.mint_id) {
+          <tr class="hover:bg-gray-700/50 transition-colors group">
+            <td class="px-6 py-4 whitespace-nowrap">
+              <div class="text-sm font-bold text-gray-200 group-hover:text-amber-300 transition-colors">{{ mint.mint_name }}</div>
+              <div class="text-xs text-gray-500 font-mono mt-1">{{ mint.location }}</div>
+              <div class="text-xs text-gray-600 mt-0.5">{{ mint.active_years }}</div>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-center align-middle">
+                <div class="inline-flex items-center justify-center w-12 h-12 bg-gray-700 rounded-full border border-gray-600 shadow-inner">
+                   <span class="text-2xl font-bold text-amber-400">{{ mint.mint_mark.split(' / ')[0] }}</span>
+                </div>
+                <div class="text-xs text-gray-500 mt-2 font-mono">{{ mint.mint_mark }}</div>
+            </td>
+            <td class="px-6 py-4 text-sm text-gray-300">
+              {{ mint.identification_tip }}
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+   <div class="mt-6 flex gap-4 bg-gray-900/50 rounded-lg p-4 border border-gray-700">
+      <div class="text-3xl">💡</div>
+      <div class="text-sm text-gray-300">
+        <p class="font-bold text-amber-400 mb-1">How to Check Your Coin:</p>
+        <p>1. Flip the coin to the <strong>Reverse</strong> side (Tails).</p>
+        <p>2. Find the <strong>Year</strong> of issue.</p>
+        <p>3. Look specifically at the space <strong>below the year</strong>. This is the most common location for mint marks on Republic India coins.</p>
+        <p class="mt-2 text-xs italic text-gray-500">Note: For older British India coins, marks may be hidden in the floral decoration.</p>
+      </div>
+    </div>
+</div>

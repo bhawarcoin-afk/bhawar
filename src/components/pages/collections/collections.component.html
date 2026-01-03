@@ -1,0 +1,88 @@
+<div class="p-4 md:p-6 bg-gray-800 rounded-xl shadow-2xl border border-gray-700 animate-fade-in">
+  <div class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
+    <h1 class="text-3xl font-bold text-amber-300">My Coin Collection</h1>
+    <span class="text-lg font-semibold text-gray-400">{{ sortedCollection().length }} coins</span>
+  </div>
+
+  <!-- Search Bar -->
+  <div class="mb-6">
+    <div class="relative">
+      <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+        <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+          <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
+        </svg>
+      </div>
+      <input 
+        type="text" 
+        [(ngModel)]="searchQuery"
+        placeholder="Search by name, year, or metal..."
+        class="w-full bg-gray-700 border border-gray-600 rounded-lg py-2 pl-10 pr-4 text-white focus:outline-none focus:ring-2 focus:ring-amber-500"
+      >
+    </div>
+  </div>
+
+  @if (sortedCollection().length > 0) {
+    <div class="overflow-x-auto">
+      <table class="min-w-full divide-y divide-gray-700">
+        <thead class="bg-gray-700/50">
+          <tr>
+            <th scope="col" (click)="sortBy('name')" class="px-6 py-3 text-left text-xs font-medium text-amber-300 uppercase tracking-wider cursor-pointer select-none">
+              Coin Name 
+              @if(getSortDirection('name') === 'asc'){<span>&uarr;</span>}
+              @if(getSortDirection('name') === 'desc'){<span>&darr;</span>}
+            </th>
+            <th scope="col" (click)="sortBy('year')" class="px-6 py-3 text-left text-xs font-medium text-amber-300 uppercase tracking-wider cursor-pointer select-none">
+              Year
+              @if(getSortDirection('year') === 'asc'){<span>&uarr;</span>}
+              @if(getSortDirection('year') === 'desc'){<span>&darr;</span>}
+            </th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-amber-300 uppercase tracking-wider">
+              Metal
+            </th>
+            <th scope="col" (click)="sortBy('estimatedValue')" class="px-6 py-3 text-left text-xs font-medium text-amber-300 uppercase tracking-wider cursor-pointer select-none">
+              Est. Value
+              @if(getSortDirection('estimatedValue') === 'asc'){<span>&uarr;</span>}
+              @if(getSortDirection('estimatedValue') === 'desc'){<span>&darr;</span>}
+            </th>
+             <th scope="col" (click)="sortBy('added_at')" class="px-6 py-3 text-left text-xs font-medium text-amber-300 uppercase tracking-wider cursor-pointer select-none">
+              Date Added
+              @if(getSortDirection('added_at') === 'asc'){<span>&uarr;</span>}
+              @if(getSortDirection('added_at') === 'desc'){<span>&darr;</span>}
+            </th>
+          </tr>
+        </thead>
+        <tbody class="bg-gray-800 divide-y divide-gray-700">
+          @for (coin of sortedCollection(); track coin.coin_id) {
+            <tr class="hover:bg-gray-700/50 transition-colors">
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="text-sm font-medium text-gray-200">{{ coin.name }}</div>
+                <div class="text-xs text-gray-400">{{ coin.period }}</div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-300">{{ coin.year }}</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-300">{{ coin.metal }}</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-green-400">{{ coin.estimatedValue }}</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-400">{{ coin.added_at.toLocaleDateString() }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  } @else {
+    @if (searchQuery()) {
+      <div class="text-center py-16">
+        <div class="text-6xl mb-4">🧐</div>
+        <h2 class="text-2xl font-semibold text-gray-300">No Coins Found</h2>
+        <p class="mt-2 text-gray-400">No coins in your collection match your search term "{{ searchQuery() }}".</p>
+      </div>
+    } @else {
+      <div class="text-center py-16">
+        <div class="text-6xl mb-4">🗂️</div>
+        <h2 class="text-2xl font-semibold text-gray-300">Your collection is empty.</h2>
+        <p class="mt-2 text-gray-400">Use the coin scanner to identify coins and add them here.</p>
+        <a [routerLink]="['/scan']" class="mt-6 inline-block bg-amber-500 hover:bg-amber-600 text-gray-900 font-bold py-3 px-6 rounded-lg shadow-lg transition-transform transform hover:scale-105">
+          Start Scanning
+        </a>
+      </div>
+    }
+  }
+</div>

@@ -1,0 +1,42 @@
+<div class="animate-fade-in space-y-12">
+  <!-- Hero Section -->
+  <div class="text-center p-8 bg-gray-800 rounded-xl border border-gray-700 shadow-2xl">
+    <h1 class="text-4xl md:text-5xl font-extrabold text-amber-300">Your Digital Numismatic Companion</h1>
+    <p class="mt-4 text-lg text-gray-300 max-w-2xl mx-auto">
+      Instantly identify any Indian coin from the Mughal Empire to the present day using your camera or by uploading photos. Get detailed history, mint marks, and market values.
+    </p>
+    <div class="mt-8 flex justify-center items-center gap-4 flex-wrap">
+      <a [routerLink]="['/scan']" class="inline-block bg-amber-500 hover:bg-amber-600 text-gray-900 font-bold py-4 px-10 rounded-lg shadow-lg text-lg transition-transform transform hover:scale-105">
+        Identify a Coin
+      </a>
+      <a [routerLink]="['/qr-scan']" class="inline-block bg-gray-700 hover:bg-gray-600 text-white font-bold py-4 px-10 rounded-lg shadow-lg text-lg transition-transform transform hover:scale-105">
+        Scan QR Code
+      </a>
+    </div>
+  </div>
+
+  <!-- Category Grid -->
+  <div>
+    <h2 class="text-3xl font-bold text-center text-gray-200 mb-8">Explore Coin Categories</h2>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      @for(category of categories; track category.name) {
+        <a [routerLink]="category.link" class="bg-gray-800 hover:bg-gray-700/80 p-6 rounded-lg border border-gray-700 shadow-lg flex flex-col items-center text-center transition-all duration-300 hover:-translate-y-2">
+          <div class="text-4xl mb-3">{{ category.icon }}</div>
+          <h3 class="text-xl font-semibold text-amber-400">{{ category.name }}</h3>
+          <p class="text-gray-400 mt-1 text-sm">{{ category.description }}</p>
+        </a>
+      }
+    </div>
+  </div>
+
+  <!-- Accessories Section -->
+  <div class="text-center p-6 bg-gray-800 rounded-xl border border-gray-700">
+    <h2 class="text-2xl font-bold text-gray-200">Coin Accessories</h2>
+    <p class="mt-2 text-gray-400">
+      Find the best albums, capsules, and tools to preserve your collection.
+    </p>
+    <a [routerLink]="['/accessories']" class="mt-4 inline-block text-amber-400 hover:text-amber-300 font-semibold">
+      Shop Accessories &rarr;
+    </a>
+  </div>
+</div>
